@@ -4,7 +4,8 @@
 #' al.'s MRG32K3a algorithm. The algorithm is coded in Fortran, for better
 #' performance. With this package you get independent streams for different
 #' random variables, as well as independent streams for the components of random
-#' vectors.
+#' vectors. To get started, type: 
+#' > vignette('rcrandom-vignette', package ='rcrandom')
 #'
 #' @docType package
 #' @name rcrandom

@@ -1,8 +1,8 @@
 Package: rcrandom
 Type: Package
-Title: Pseudo-random number generators for random variables and vectors
+Title: Pseudo-random number generators for random variables and vectors.
 Version: 0.0.0.9000
-Date: 2015-09-30
+Date: 2016-04-20
 Authors@R: person("Ricardo", "T. Lemos", email = "rtl00@yahoo.com", 
     role = c("aut", "cre"))
 Description: This package lets you generate pseudo-random numbers using
@@ -11,12 +11,9 @@ Description: This package lets you generate pseudo-random numbers using
     With this package you get independent streams for
     different random variables, as well as
     independent streams for the components of random vectors.
-License: MIT + file LICENCE
+    To get started, type: > vignette('rcrandom-vignette', package ='rcrandom')
+License: APACHE 2.0
 LazyData: true
-Depends:
-    R (>= 3.1.1)
-Imports:
-    methods
 Collate:
     rcmrg32k3a.R
     rcrng.R
