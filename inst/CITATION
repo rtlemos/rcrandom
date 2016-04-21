@@ -1,0 +1,9 @@
+bibentry("article",
+   title = "My title",
+   author = "Lemos, RT",
+   journal = "my journal",
+   year   = "2015",
+   volume   = "0",
+   number = "0",
+   pages    = "0-0"
+)
