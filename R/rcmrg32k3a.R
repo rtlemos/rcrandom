@@ -23,7 +23,6 @@
 #'
 #' @field algorithm.name character. Name of algorithm
 #' 
-#' @importFrom methods setRefClass
 #' @export rcmrg32k3a
 #' @exportClass rcmrg32k3a
 #'
