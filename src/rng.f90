@@ -109,14 +109,16 @@ subroutine get_advanced_seed(s)
     real(8),dimension(6), intent(inout) :: s
     real(8),parameter                   :: m1=4294967087.0d0
     real(8),parameter                   :: m2=4294944443.0d0
-    real(8),dimension(3,3),parameter    :: A1p127 =reshape(  (/ 2427906178.0d0,  226153695.0d0,  1988835001.0d0,   &
-                                                                3580155704.0d0, 1230515664.0d0,   986791581.0d0,   &
-                                                                 949770784.0d0, 3580155704.0d0,  1230515664.0d0/), &
-                                                                 (/ 3,3 /) )
-    real(8),dimension(3,3),parameter    :: A2p127 =reshape(  (/ 1464411153.0d0,   32183930.0d0,  2824425944.0d0,   &
-                                                                 277697599.0d0, 1464411153.0d0,    32183930.0d0,   &
-                                                                1610723613.0d0, 1022607788.0d0,  2093834863.0d0/), &
-                                                                 (/ 3,3 /) )
+    real(8),dimension(3,3),parameter    :: A1p127 =reshape(  &
+      (/ 2427906178.0d0,  226153695.0d0,  1988835001.0d0,   &
+      3580155704.0d0, 1230515664.0d0,   986791581.0d0,   &
+      949770784.0d0, 3580155704.0d0,  1230515664.0d0/), &
+      (/ 3,3 /) )
+    real(8),dimension(3,3),parameter    :: A2p127 =reshape( &
+      (/ 1464411153.0d0,   32183930.0d0,  2824425944.0d0,   &
+      277697599.0d0, 1464411153.0d0,    32183930.0d0,   &
+      1610723613.0d0, 1022607788.0d0,  2093834863.0d0/), &
+      (/ 3,3 /) )
     call MatVecModM( A1p127, s(1:3), s(1:3), m1 )
     call MatVecModM( A2p127, s(4:6), s(4:6), m2 )
 end subroutine
@@ -128,14 +130,17 @@ subroutine get_advanced_subseed( subseed, n_jumps )
     integer                             :: i
     real(8),parameter                   :: m1=4294967087.0d0
     real(8),parameter                   :: m2=4294944443.0d0
-    real(8),dimension(3,3),parameter    :: A1p76 = reshape((/     82758667.0d0, 3672831523.0d0,  3672091415.0d0,   &
-                                                                 1871391091.0d0,   69195019.0d0,  3528743235.0d0,   &
-                                                                 4127413238.0d0, 1871391091.0d0,    69195019.0d0/), &
-                                                                 (/ 3,3 /) )
-    real(8),dimension(3,3),parameter    :: A2p76 = reshape((/    1511326704.0d0, 4292754251.0d0,  3859662829.0d0,   &
-                                                                 3759209742.0d0, 1511326704.0d0,  4292754251.0d0,   &
-                                                                 1610795712.0d0, 3889917532.0d0,  3708466080.0d0/), &
-                                                                 (/ 3,3 /) )
+    real(8),dimension(3,3),parameter    :: A1p76 = reshape( &
+      (/     82758667.0d0, 3672831523.0d0,  3672091415.0d0,   &
+      1871391091.0d0,   69195019.0d0,  3528743235.0d0,   &
+      4127413238.0d0, 1871391091.0d0,    69195019.0d0/), &
+      (/ 3,3 /) )
+    real(8),dimension(3,3),parameter    :: A2p76 = reshape( &
+      (/    1511326704.0d0, 4292754251.0d0,  3859662829.0d0,   &
+      3759209742.0d0, 1511326704.0d0,  4292754251.0d0,   &
+      1610795712.0d0, 3889917532.0d0,  3708466080.0d0/), &
+      (/ 3,3 /) )
+
     do i=1,n_jumps
         call MatVecModM (A1p76, subseed(1:3), subseed(1:3), m1)
         call MatVecModM (A2p76, subseed(4:6), subseed(4:6), m2)
@@ -150,22 +155,27 @@ subroutine get_advanced_state(ee, cc, Cg)
     real(8),dimension(3,3)              :: B1, B2, C1, C2
     real(8),parameter                   :: m1=4294967087.0d0
     real(8),parameter                   :: m2=4294944443.0d0
-    real(8),dimension(3,3),parameter    :: A1p0 =  reshape(  (/       0.0d0,          0.0d0,     -810728.0d0,   &
-                                                                      1.0d0,          0.0d0,     1403580.0d0,   &
-                                                                      0.0d0,          1.0d0,           0.0d0/), &
-                                                                      (/ 3,3 /) )
-    real(8),dimension(3,3),parameter    :: A2p0 =  reshape(  (/       0.0d0,          0.0d0,    -1370589.0d0,   &
-                                                                      1.0d0,          0.0d0,           0.0d0,   &
-                                                                      0.0d0,          1.0d0,      527612.0d0/), &
-                                                                      (/ 3,3 /) )
-    real(8),dimension(3,3),parameter    :: InvA1 = reshape( (/184888585.0d0,           1.0d0,           0.0d0,   &
-                                                                      0.0d0,           0.0d0,           1.0d0,   &
-                                                             1945170933.0d0,           0.0d0,           0.0d0/), &
-                                                             (/ 3,3 /) )
-    real(8),dimension(3,3),parameter    :: InvA2 = reshape((/         0.0d0,          1.0d0,           0.0d0,   &
-                                                              360363334.0d0,          0.0d0,           1.0d0,   &
-                                                             4225571728.0d0,          0.0d0,           0.0d0/), &
-                                                             (/ 3,3 /) )
+    real(8),dimension(3,3),parameter    :: A1p0 =  reshape( &
+      (/       0.0d0,          0.0d0,     -810728.0d0,   &
+      1.0d0,          0.0d0,     1403580.0d0,   &
+      0.0d0,          1.0d0,           0.0d0/), &
+      (/ 3,3 /) )
+    real(8),dimension(3,3),parameter    :: A2p0 =  reshape( &
+      (/       0.0d0,          0.0d0,    -1370589.0d0,   &
+      1.0d0,          0.0d0,           0.0d0,   &
+      0.0d0,          1.0d0,      527612.0d0/), &
+      (/ 3,3 /) )
+    real(8),dimension(3,3),parameter    :: InvA1 = reshape( &
+      (/184888585.0d0,           1.0d0,           0.0d0,   &
+      0.0d0,           0.0d0,           1.0d0,   &
+      1945170933.0d0,           0.0d0,           0.0d0/), &
+      (/ 3,3 /) )
+    real(8),dimension(3,3),parameter    :: InvA2 = reshape( &
+      (/         0.0d0,          1.0d0,           0.0d0,   &
+      360363334.0d0,          0.0d0,           1.0d0,   &
+      4225571728.0d0,          0.0d0,           0.0d0/), &
+      (/ 3,3 /) )
+
     if( ee>0 ) then
         e=ee
         call MatTwoPowModM (A1p0, B1, m1, e)
@@ -199,19 +209,22 @@ subroutine get_next_substream(Bg)
     real(8),dimension(6),intent(inout)  :: Bg
     real(8),parameter                   :: m1=4294967087.0d0
     real(8),parameter                   :: m2=4294944443.0d0
-    real(8),dimension(3,3),parameter    :: A1p76 = reshape((/     82758667.0d0, 3672831523.0d0,  3672091415.0d0,   &
-                                                                 1871391091.0d0,   69195019.0d0,  3528743235.0d0,   &
-                                                                 4127413238.0d0, 1871391091.0d0,    69195019.0d0/), &
-                                                                 (/ 3,3 /) )
-    real(8),dimension(3,3),parameter    :: A2p76 = reshape((/    1511326704.0d0, 4292754251.0d0,  3859662829.0d0,   &
-                                                                 3759209742.0d0, 1511326704.0d0,  4292754251.0d0,   &
-                                                                 1610795712.0d0, 3889917532.0d0,  3708466080.0d0/), &
-                                                                 (/ 3,3 /) )
+    real(8),dimension(3,3),parameter    :: A1p76 = reshape( &
+      (/     82758667.0d0, 3672831523.0d0,  3672091415.0d0,   &
+      1871391091.0d0,   69195019.0d0,  3528743235.0d0,   &
+      4127413238.0d0, 1871391091.0d0,    69195019.0d0/), &
+      (/ 3,3 /) )
+    real(8),dimension(3,3),parameter    :: A2p76 = reshape( &
+      (/    1511326704.0d0, 4292754251.0d0,  3859662829.0d0,   &
+      3759209742.0d0, 1511326704.0d0,  4292754251.0d0,   &
+      1610795712.0d0, 3889917532.0d0,  3708466080.0d0/), &
+      (/ 3,3 /) )
     call MatVecModM(A1p76, Bg(1:3), Bg(1:3), m1)
     call MatVecModM(A2p76, Bg(4:6), Bg(4:6), m2)
 end subroutine get_next_substream
 
-! Check that the seeds are legitimate values. Returns 0 if legal seeds, -1 otherwise
+! Check that the seeds are legitimate values.
+! Returns 0 if legal seeds, -1 otherwise
 subroutine get_seed_check(seed,ok)
     implicit none
     integer,dimension(6),intent(in)     :: seed
@@ -336,10 +349,12 @@ subroutine MatPowModM(A, B, m, p)
     real(8),intent(in)                         :: m
     integer,intent(in)                         :: p
     integer                                    :: n
-    real(8),dimension(3,3),parameter           :: id3 =reshape((/1.0d0, 0.0d0, 0.0d0,   &
-                                                                 0.0d0, 1.0d0, 0.0d0,   &
-                                                                 0.0d0, 0.0d0, 1.0d0/), &
-                                                                 (/ 3,3 /))
+    real(8),dimension(3,3),parameter           :: id3 =reshape( &
+      (/1.0d0, 0.0d0, 0.0d0,   &
+      0.0d0, 1.0d0, 0.0d0,   &
+      0.0d0, 0.0d0, 1.0d0/), &
+      (/ 3,3 /))
+
     W=A
     B=id3
     n=p

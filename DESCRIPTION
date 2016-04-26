@@ -3,7 +3,7 @@ Type: Package
 Title: Pseudo-random number generators for random variables and vectors.
 Version: 0.0.0.9000
 Date: 2016-04-20
-Authors@R: person("Ricardo", "T. Lemos", email = "rtl00@yahoo.com", 
+Authors@R: person("Ricardo", "T. Lemos", email = "rtl00@yahoo.com",
     role = c("aut", "cre"))
 Description: This package lets you generate pseudo-random numbers using
     Pierre L'Ecuyer et al.'s MRG32K3a algorithm.
@@ -17,7 +17,9 @@ LazyData: true
 Collate:
     rcmrg32k3a.R
     rcrng.R
-    rcrandom.R
+    opt.R
+    opt-fns.R
+    rcrandom-package.R
 Suggests:
     testthat,
     knitr,
