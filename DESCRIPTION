@@ -6,20 +6,24 @@ Date: 2016-04-20
 Authors@R: person("Ricardo", "T. Lemos", email = "rtl00@yahoo.com",
     role = c("aut", "cre"))
 Description: This package lets you generate pseudo-random numbers using
-    Pierre L'Ecuyer et al.'s MRG32K3a algorithm.
-    The algorithm is coded in Fortran, for added performance.
-    With this package you get independent streams for
-    different random variables, as well as
-    independent streams for the components of random vectors.
-    To get started, type: > vignette('rcrandom-vignette', package ='rcrandom')
+    Pierre L'Ecuyer et al.'s MRG32K3a algorithm. The algorithm is coded in 
+    Fortran, for added performance. With this package you get independent 
+    streams for different random variables, as well as independent streams 
+    for the components of random vectors. To get started, type: 
+    > vignette('rcrandom-vignette', package ='rcrandom')
 License: APACHE 2.0
 LazyData: true
 Collate:
     rcmrg32k3a.R
     rcrng.R
+    rcrandom-package.R
     opt.R
     opt-fns.R
-    rcrandom-package.R
+    opt-zlinear.R
+    opt-zquadratic.R
+Imports:
+    GenSA,
+    Matrix
 Suggests:
     testthat,
     knitr,

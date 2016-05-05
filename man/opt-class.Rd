@@ -51,8 +51,7 @@ Then, use the pdf method to obtain fast evaluations of the approximate p.d.f.
 \section{Methods}{
 
 \describe{
-\item{\code{cdf(x = NULL, ...)}}{Provides either the cumulative density function or
-its evaluation for given x.}
+\item{\code{cdf(x = NULL, ...)}}{Provides either cumulative density function or its evaluation given x}
 
 \item{\code{construct(fn, initial, is.logf = FALSE, lower = -Inf, upper = Inf,
   max.it = 300, args = NULL, zspecs = NULL, skip.z = FALSE,
@@ -113,8 +112,8 @@ to pdf, cdf and invcdf}
 
 \item{\code{initialize(fn = NULL, initial = NULL, is.logf = FALSE, lower = -Inf,
   upper = Inf, max.it = 300, args = NULL, zspecs = NULL,
-  skip.c = FALSE, skip.z = FALSE, verbose = FALSE,
-  method = "Nelder-Mead", optim.tol = 1e-04)}}{Lets you run optimization and pdf exploration in one go
+  skip.c = FALSE, skip.z = FALSE, verbose = FALSE, method = "GenSA",
+  optim.tol = 1e-04)}}{Lets you run optimization and pdf exploration in one go
 
       @param fn function p.d.f. (needn't integrate to 1) to be optimized
 
@@ -138,19 +137,16 @@ to pdf, cdf and invcdf}
 
       }
 
-\item{\code{invcdf(p = NULL, ...)}}{Provides either the inverse of the cumulative density
+\item{\code{invcdf(p = NULL, ...)}}{Provides either inverse of the cumulative density
 function or its evaluation, for a given p.}
 
 \item{\code{pdf(x = NULL, do.log = FALSE)}}{Approximate p.d.f. evaluation.
 
-      @param x numeric,matrix,NULL X-coordinates of the
-      points where the p.d.f. is evaluated
+      @param x numeric,matrix,NULL X-coords of points where pdf is evaluated
 
-      @param do.log logical Should the log-transformed
-      p.d.f. be provided instead?
+      @param do.log logical Provide log-transformed p.d.f. instead?
 
-      @result myf numeric,matrix,function Either the
-      evaluations or the R function itself
+      @result myf numeric,matrix,function Either evaluations or R function
       }
 
 \item{\code{set.z(zspecs = NULL)}}{Provides transformed input parameters based on the optimization of
@@ -169,7 +165,7 @@ myfun <- function(x) dgamma(x, shape = 1.3, scale = 1) *
 myfun.integ <- integrate(
              f = myfun, lower = 0, upper = 10)$value
 fn <- function(x) myfun(x) / myfun.integ
-s <- optimz(fn = fn, initial = 1, lower = 0)
+s <- opt(fn = fn, initial = 1, lower = 0)
 x <- seq(0, 10, 0.1)
 plot(x, fn(x), ty = "l", col = "grey", lwd = 4,
    xlab = "x", ylab = "pdf")

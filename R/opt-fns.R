@@ -84,6 +84,21 @@ get.rfns <- function(){
       return(list(b0 = b0, b1 = b1, b2 = b2))
     },
     
+    betas.quadratic.old = function(nx, x, y){
+      "same as betas.linear but for ZQuadratic objects; old version"
+      
+      d <- (x[3] - x[1]) / (x[2] - x[1])
+      b0 <- y[1:(nx - 1)]
+      b1 <- rep(NA, nx - 1)
+      b1[1] <- d / (d - 1) * (y[2] - y[3] / d ^ 2 - y[1] * (1 - 1 / d ^ 2))
+      for (i in 2:(nx - 1)) {
+        b1[i] <- (b1[i - 1] + 2 * (y[i] - y[i - 1] - b1[i - 1])) * 
+          (x[i + 1] - x[i]) / (x[i] - x[i - 1])
+      }
+      b2 <- y[2:nx] - y[1:(nx - 1)] - b1[1:(nx - 1)]      
+      return(list(b0 = b0, b1 = b1, b2 = b2))
+    },
+    
     integrals.linear = function(beta0, beta1, xfrom = 0,
                                 xto = 1, ...){
       "integrals for ZLinear objects, used in cdf computation"
@@ -92,53 +107,51 @@ get.rfns <- function(){
       return(out)
     },
     
-    integrals.quadratic = function(beta0, beta1, beta2,
-                                   xfrom = 0, xto = 1,
+    integrals.quadratic = function(beta0, beta1, beta2, xfrom = 0, xto = 1,
                                    erf, erfi){
-      "integrals for ZQuadratic objects,
-      used in cdf computation"
+      "integrals for ZQuadratic objects, used in cdf computation"
       
       twosqpi <- 2 / sqrt(pi)
       spi2    <- sqrt(pi) / 2
       out <- mapply(
         beta0, beta1, beta2, xfrom, xto,
         FUN = function(b0, b1, b2, xfrom, xto){
-          imL <- -sign(b2) * (b2 * xfrom + 0.5 * b1) /
-            sqrt(abs(b2))
-          imU <- -sign(b2) * (b2 * xto + 0.5 * b1) /
-            sqrt(abs(b2))
-          if (abs(b1 / b2) < 100) {
-            # do not use approximation
-            if (b2 < 0) {
-              dlt <- erf(imU) - erf(imL)
-            } else {
-              dlt <- erfi(imU) - erfi(imL)
-            }
-          } else if (b2 < 0) {
-            # use Taylor series approx. to
-            # erf difference (2 terms)
-            dlt <- exp(-imL ^ 2) * twosqpi * (imU - imL) *
-              (1 - (imU - imL) * imL)
+          imL <- -sign(b2) * (b2 * xfrom + 0.5 * b1) / sqrt(abs(b2))
+          imU <- -sign(b2) * (b2 * xto + 0.5 * b1) / sqrt(abs(b2))
+          if (b2 == 0) {
+            res <- 0
           } else {
-            # use T.S. approximation to
-            # erfi difference (2 terms)
-            dlt <- exp(imL ^ 2) * twosqpi * (imU - imL) *
-              (1 + (imU - imL) * imL)
+            if (abs(b1 / b2) < 100) {
+              # do not use approximation
+              if (b2 < 0) {
+                dlt <- erf(imU) - erf(imL)
+              } else {
+                dlt <- erfi(imU) - erfi(imL)
+              }
+            } else if (b2 < 0) {
+              # use Taylor series approx. to
+              # erf difference (2 terms)
+              dlt <- exp(-imL ^ 2) * twosqpi * (imU - imL) *
+                (1 - (imU - imL) * imL)
+            } else {
+              # use T.S. approximation to
+              # erfi difference (2 terms)
+              dlt <- exp(imL ^ 2) * twosqpi * (imU - imL) *
+                (1 + (imU - imL) * imL)
+            }
+            res <- -spi2 / sqrt(abs(b2)) * dlt *
+              exp((4 * b0 * b2 - b1 ^ 2) / (4 * b2))
           }
-          res <- -spi2 / sqrt(abs(b2)) * dlt *
-            exp((4 * b0 * b2 - b1 ^ 2) / (4 * b2))
           return(res)
         })
-      
+      out[beta2 == 0] <- 0
       return(out)
     },
     
-    integralsMult = function(beta0, beta1, beta2, xfrom,
-                             xto, ExpIntegral){
+    integralsMult = function(beta0, beta1, beta2, xfrom, xto, ExpIntegral){
       "to be documented"
       
-      out <- mapply(
-        beta0, beta1, beta2, xfrom, xto,
+      out <- mapply(beta0, beta1, beta2, xfrom, xto,
         FUN = function(beta0, beta1, beta2, xfrom, xto){
           if (sign(xfrom) == sign(xto)) {
             xmiddle1 <- xmiddle2 <- 0.5 * (xfrom + xto)
@@ -196,8 +209,7 @@ get.rfns <- function(){
       return(out)
     },
     
-    cdf.linear = function(z, x, dx, beta0, beta1, pcdf,
-                          normct){
+    cdf.linear = function(z, x, dx, beta0, beta1, pcdf, normct){
       "compute the cumulative density function for
       a ZLinear object"
       
@@ -223,8 +235,7 @@ get.rfns <- function(){
       return(out)
     },
     
-    invcdf.linear = function(p, x, dx, beta0, beta1,
-                             pcdf, normct){
+    invcdf.linear = function(p, x, dx, beta0, beta1, pcdf, normct){
       "compute the inverse CDF for a ZLinear object"
       
       pos <- mapply(p, FUN = function(p){
@@ -246,11 +257,9 @@ get.rfns <- function(){
       return(out)
     },
     
-    cdf.quadratic = function(z, x, dx, beta0, beta1,
-                             beta2, pcdf,
+    cdf.quadratic = function(z, x, dx, beta0, beta1, beta2, pcdf,
                              normct, erf, erfi){
-      "compute the cumulative density function for
-      a ZQuadratic object"
+      "compute the cumulative density function for a ZQuadratic object"
       
       pos <- mapply(z, FUN = function(z){
         j <- which.min(abs(z - x))
@@ -270,25 +279,29 @@ get.rfns <- function(){
         sb2 <- sqrt(abs(b2))
         imL <- -sign(b2) * 0.5 * b1 / sb2
         imU <- -sign(b2) * (b2 * zp + 0.5 * b1) / sb2
-        if (abs(b1 / b2) < 100) { #do not use approximation
-          if (b2 < 0) {
-            dlt <- erf(imU) - erf(imL)
-          } else {
-            dlt <- erfi(imU) - erfi(imL)
-          }
-        } else if (b2 < 0) {
-          # 2-term Taylor series approx. to erf difference
-          dlt <- exp(-imL ^ 2) * twosqpi * (imU - imL) *
-            (1 - (imU - imL) * imL)
+        if (b2 == 0) {
+          r <- 0
         } else {
-          # 2-term T.S. approximation to erfi difference
-          dlt <- exp(imL ^ 2) * twosqpi * (imU - imL) *
-            (1 + (imU - imL) * imL)
+          if (abs(b1 / b2) < 100) { #do not use approximation
+            if (b2 < 0) {
+              dlt <- erf(imU) - erf(imL)
+            } else {
+              dlt <- erfi(imU) - erfi(imL)
+            }
+          } else if (b2 < 0) {
+            # 2-term Taylor series approx. to erf difference
+            dlt <- exp(-imL ^ 2) * twosqpi * (imU - imL) *
+              (1 - (imU - imL) * imL)
+          } else {
+            # 2-term T.S. approximation to erfi difference
+            dlt <- exp(imL ^ 2) * twosqpi * (imU - imL) *
+              (1 + (imU - imL) * imL)
+          }
+          cp <- -spi2 / sb2 * dlt *
+            exp((4 * b0 * b2 - b1 ^ 2) / (4 * b2))
+          rd <- if (i > 1) pcdf[i - 1] else 0.0
+          r  <- rd + cp * dx[i] / normct
         }
-        cp <- -spi2 / sb2 * dlt *
-          exp((4 * b0 * b2 - b1 ^ 2) / (4 * b2))
-        rd <- if (i > 1) pcdf[i - 1] else 0.0
-        r  <- rd + cp * dx[i] / normct
         out[cr] <- r
       }
       out[pos >= n] <- 1
@@ -758,8 +771,7 @@ get.ffns <- function(){
     
     integrals.quadratic = function(beta0, beta1, beta2,
                                    xlow, xhigh, ...){
-      "integrals for ZQuadratic objects,
-      used in cdf computation"
+      "integrals for ZQuadratic objects, used in cdf computation"
       
       if (length(xlow) == 1) xlow = rep(xlow, length(beta0))
       if (length(xhigh) == 1) xhigh = rep(xhigh,
