@@ -47,10 +47,9 @@
 #' @importFrom Matrix solve
 #' @importFrom Matrix t
 #' @importFrom Matrix nearPD
-#'
+#' @importFrom methods new
 #' @export opt
 #' @exportClass opt
-#'
 #'
 opt <- setRefClass(
   Class = "opt",

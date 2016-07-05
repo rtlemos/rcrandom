@@ -24,25 +24,26 @@ test_that("Univariate Gamma p.d.f.", {
   expect_true(abs(
     integrate(f = s$pdf,
               lower = 0,
-              upper = ub)$value - 1) < 1e-3)
+              upper = ub)$value - 1) < 1e-2)
   expect_true(abs(s$cdf(ub) - 1) < 1e-3)
   expect_true(abs(s$invcdf(1e-50)) < 1e-1)
 })
 
 test_that("Univariate Beta p.d.f.", {
-  a <- 1/3
-  b <- 1
+  a <- 1.2
+  b <- 1.4
   s <- opt(fn = function(x) dbeta(x, a, b),
            initial = 0.1, is.logf = FALSE, verbose = FALSE,
            lower = 0, upper = 1)
   expect_true(abs(s$mode - (a - 1) / (a + b - 2)) < 1e-3) #only true if a,b > 1
   expect_true(abs(integrate(f = s$pdf, lower = 0, upper = 1)$value - 1) < 1e-3)
-  expect_true(abs(s$cdf(ub) - 1) < 1e-3)
+  expect_true(abs(s$cdf(1) - 1) < 1e-3)
   expect_true(abs(s$invcdf(1e-50)) < 1e-1)
 })
 
 test_that("Beta coefficients", {
   x <- c(0.1, 0.15, 0.3, 0.4, 0.55, 0.8, 0.9, 0.97, 0.99999)
+  nx <- length(x)
   y <- dbeta(x, 1.6, 0.5, log = TRUE)
   b0 <- b1 <- b2 <- rep(NA, 9 - 1)
   b0[1] <- y[1]

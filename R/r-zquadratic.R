@@ -20,6 +20,7 @@
 #' @field pcdf numeric Partial cdf associated with PQFA
 #' @field fns list Auxiliary functions (in R or Fortran)
 #'
+#' @importFrom methods new
 #' @export ZQuadratic
 #' @exportClass ZQuadratic
 #'
@@ -264,8 +265,7 @@ ZQuadratic <- setRefClass(
           if (operand.side == "left" & operation == "-") {
             # Normal - ZQuadratic
             tmp.coord <- .self$iget.multiply.constant(-1.0)
-            tmp <- ZQuadratic$new(x = tmp.coord$x,
-                                  y = tmp.coord$y)
+            tmp <- ZQuadratic(x = tmp.coord$x, y = tmp.coord$y)
             tmp.specs <- list(
               n = length(tmp$x), x = tmp$x,
               dx = tmp$dx, b0 = tmp$beta0,

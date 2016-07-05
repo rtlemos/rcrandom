@@ -23,12 +23,15 @@
 #'
 #' @field algorithm.name character. Name of algorithm
 #' 
+#' @importFrom methods new
 #' @export rcmrg32k3a
 #' @exportClass rcmrg32k3a
 #'
 rcmrg32k3a <- setRefClass(
   Class = "rcmrg32k3a",
-  fields = list(algorithm.name = "character"),
+  fields = list(
+    algorithm.name = "character"
+  ),
   methods = list(
     initialize = function(name = NULL){
       if (!missing(name)) .self$algorithm.name <- name

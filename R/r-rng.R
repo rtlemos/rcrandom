@@ -18,6 +18,7 @@
 #' @field ig numeric. State matrix 3.
 #' @field algorithm rcmrg32k3a. Algorithm that advances the state matrix. 
 #' 
+#' @importFrom methods new
 #' @export rcrng
 #' @exportClass rcrng
 #'

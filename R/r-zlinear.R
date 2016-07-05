@@ -11,6 +11,21 @@
 #' methods, see those in ZQuadratic.
 #' Although this class is not virtual, it is not exported.
 #'
+#'
+#' @field n numeric. 
+#' @field x numeric. 
+#' @field y numeric. 
+#' @field beta0 numeric. 
+#' @field beta1 numeric. 
+#' @field dx numeric. 
+#' @field normct numeric. 
+#' @field pcdf numeric. 
+#' @field fns list. 
+#'
+#' @importFrom methods new
+#' @export ZLinear
+#' @exportClass ZLinear
+#'
 #' @examples
 #' x <- seq(-4, 4, 0.3)
 #' y <- dnorm(x, log = TRUE)
@@ -19,7 +34,7 @@
 #' zq$plot.fit(do.log)
 #' lines(seq(-4, 4, 0.1), dnorm(seq(-4, 4, 0.1),
 #'  log = do.log), ty = "l", lwd = 1, lty = 2)
-#'
+#'  
 ZLinear <- setRefClass(
   Class = "ZLinear",
   fields = list(
@@ -249,8 +264,7 @@ ZLinear <- setRefClass(
           if (operand.side == "left" & operation == "-") {
             # Normal - ZLinear
             tmp.coord <- .self$iget.multiply.constant(-1.0)
-            tmp <- ZLinear$new(x = tmp.coord$x,
-                               y = tmp.coord$y)
+            tmp <- ZLinear(x = tmp.coord$x, y = tmp.coord$y)
             tmp.specs <- list(
               n = length(tmp$x),
               x = tmp$x,
